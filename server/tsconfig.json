@@ -27,11 +27,6 @@
     "resolveJsonModule": true,
     "baseUrl": ".."
   },
-  "exclude": [
-    "../node_modules"
-  ],
-  "include": [
-    "./lireddit-server/src/**/*.tsx",
-    "./lireddit-server/src/**/*.ts"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["/.src/**/*.tsx", "./src/**/*.ts"]
 }

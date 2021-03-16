@@ -1,18 +1,20 @@
 import "reflect-metadata"
 import { MikroORM } from "@mikro-orm/core";
 import microConfig from "./mikro-orm.config";
-import * as express from 'express';
+import express from 'express';
 import {ApolloServer} from 'apollo-server-express';
 import {buildSchema} from 'type-graphql';
 import {HelloResolver} from "./resolvers/hello";
 import {PostResolver} from "./resolvers/post";
 import * as redis from 'redis';
-import * as session from 'express-session';
-import * as connectRedis from 'connect-redis'
+import session from 'express-session';
+import connectRedis from 'connect-redis'
 import {__prod__} from "./constants";
 import {MyContext} from "./types";
+import {UserResolver} from './resolvers/user';
 
-const port = 5000;
+
+const port = 5001;
 
 const main = async () => {
     const orm = await MikroORM.init(microConfig);
@@ -45,7 +47,7 @@ const main = async () => {
 
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
-            resolvers: [HelloResolver, PostResolver],
+            resolvers: [HelloResolver, PostResolver, UserResolver],
             validate: false
         }),
         context: ({req, res }): MyContext => ({ em: orm.em, req, res }),

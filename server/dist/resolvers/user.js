@@ -142,7 +142,7 @@ let UserResolver = class UserResolver {
                     errors: [
                         {
                             field: "password",
-                            message: "incorrent password",
+                            message: "incorrect password",
                         },
                     ],
                 };
