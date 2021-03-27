@@ -54,7 +54,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const redisClient = redis.createClient();
     app.use(cors_1.default({
         origin: "http://localhost:3000",
-        credentials: true
+        credentials: true,
     }));
     app.use(express_session_1.default({
         name: 'qid',
