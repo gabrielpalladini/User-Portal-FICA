@@ -84,9 +84,9 @@ let UserResolver = class UserResolver {
                     errors: [
                         {
                             field: "username",
-                            message: "length must be greater than 2",
-                        },
-                    ],
+                            message: "length must be greater than 2"
+                        }
+                    ]
                 };
             }
             if (options.password.length <= 2) {
@@ -94,18 +94,25 @@ let UserResolver = class UserResolver {
                     errors: [
                         {
                             field: "password",
-                            message: "length must be greater than 2",
-                        },
-                    ],
+                            message: "length must be greater than 2"
+                        }
+                    ]
                 };
             }
             const hashedPassword = yield argon2_1.default.hash(options.password);
-            const user = em.create(User_1.User, {
-                username: options.username,
-                password: hashedPassword
-            });
+            let user;
             try {
-                yield em.persistAndFlush(user);
+                const result = yield em
+                    .createQueryBuilder(User_1.User)
+                    .getKnexQuery()
+                    .insert({
+                    username: options.username,
+                    password: hashedPassword,
+                    created_at: new Date(),
+                    updated_at: new Date()
+                })
+                    .returning("*");
+                user = result[0];
             }
             catch (err) {
                 if (err.code === "23505") {
@@ -113,9 +120,9 @@ let UserResolver = class UserResolver {
                         errors: [
                             {
                                 field: "username",
-                                message: "username already taken",
-                            },
-                        ],
+                                message: "username already taken"
+                            }
+                        ]
                     };
                 }
             }
@@ -131,9 +138,9 @@ let UserResolver = class UserResolver {
                     errors: [
                         {
                             field: "username",
-                            message: "that username doesn't exist",
+                            message: "that username doesn't exist"
                         }
-                    ],
+                    ]
                 };
             }
             const valid = yield argon2_1.default.verify(user.password, options.password);
@@ -142,14 +149,14 @@ let UserResolver = class UserResolver {
                     errors: [
                         {
                             field: "password",
-                            message: "incorrect password",
-                        },
-                    ],
+                            message: "incorrect password"
+                        }
+                    ]
                 };
             }
             req.session.userId = user.id;
             return {
-                user,
+                user
             };
         });
     }

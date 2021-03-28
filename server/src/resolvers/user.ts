@@ -6,11 +6,12 @@ import {
   Arg,
   Ctx,
   ObjectType,
-  Query,
+  Query
 } from "type-graphql";
 import {User} from "../entities/User";
 import {MyContext} from "../types";
 import argon2 from 'argon2';
+import {EntityIdentifier, EntityManager} from '@mikro-orm/core';
 
 /*@InputType()
 class UsernamePasswordInput {
@@ -36,7 +37,6 @@ export class UserResolver {
     return user;
   }
 }*/
-
 
 
 @InputType()
@@ -88,9 +88,9 @@ export class UserResolver {
         errors: [
           {
             field: "username",
-            message: "length must be greater than 2",
-          },
-        ],
+            message: "length must be greater than 2"
+          }
+        ]
       };
     }
 
@@ -99,19 +99,26 @@ export class UserResolver {
         errors: [
           {
             field: "password",
-            message: "length must be greater than 2",
-          },
-        ],
+            message: "length must be greater than 2"
+          }
+        ]
       };
     }
 
-    const hashedPassword = await argon2.hash(options.password)
-    const user = em.create(User, {
-      username: options.username,
-      password: hashedPassword
-    });
+    const hashedPassword = await argon2.hash(options.password);
+    let user;
     try {
-      await em.persistAndFlush(user);
+      const result = await (em as EntityManager)
+        .createQueryBuilder(User)
+        .getKnexQuery()
+        .insert({
+          username: options.username,
+          password: hashedPassword,
+          created_at: new Date(),
+          updated_at: new Date()
+        })
+        .returning("*");
+      user = result[0];
     } catch (err) {
       // duplicate username error
       if (err.code === "23505") {
@@ -119,9 +126,9 @@ export class UserResolver {
           errors: [
             {
               field: "username",
-              message: "username already taken",
-            },
-          ],
+              message: "username already taken"
+            }
+          ]
         };
       }
     }
@@ -145,9 +152,9 @@ export class UserResolver {
         errors: [
           {
             field: "username",
-            message: "that username doesn't exist",
+            message: "that username doesn't exist"
           }
-        ],
+        ]
       }
     }
     const valid = await argon2.verify(user.password, options.password);
@@ -156,16 +163,16 @@ export class UserResolver {
         errors: [
           {
             field: "password",
-            message: "incorrect password",
-          },
-        ],
+            message: "incorrect password"
+          }
+        ]
       };
     }
 
     req.session.userId = user.id;
 
     return {
-      user,
+      user
     };
   }
 }
