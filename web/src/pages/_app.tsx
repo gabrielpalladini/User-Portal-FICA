@@ -3,7 +3,7 @@ import { ThemeProvider, CSSReset } from '@chakra-ui/react'
 import theme from '../theme'
 import { Provider, createClient, dedupExchange, fetchExchange } from "urql";
 import { cacheExchange, Cache, QueryInput} from '@urql/exchange-graphcache';
-import { MeDocument } from '../generated/graphql';
+import {LoginMutation, MeDocument, MeQuery, RegisterMutation} from '../generated/graphql';
 
 function betterUpdateQuery<Result, Query>(
   cache: Cache,
@@ -11,7 +11,7 @@ function betterUpdateQuery<Result, Query>(
   result: any,
   fn: (r: Result, q: Query) => Query
 ) {
-  return cache.updateQuery(qi, (data) => fn(result, data as any) as any)
+  return cache.updateQuery(qi, (data) => fn(result, data as any) as any);
 }
 
 const client = createClient({
@@ -22,11 +22,43 @@ const client = createClient({
   exchanges: [dedupExchange, cacheExchange({
     updates: {
       Mutation: {
-        login: (result, args, cache, info) => {
-          cache.updateQuery({query: MeDocument}, )
+        login: (_result, args, cache, info) => {
+          betterUpdateQuery<LoginMutation, MeQuery>(
+            cache,
+            { query: MeDocument },
+            _result,
+            (result, query) => {
+              if(result.login.errors) {
+                return query;
+              } else {
+                return {
+                  me: result.login.user,
+                };
+              }
+            }
+          );
+        },
+        register: (_result, args, cache, info) => {
+          betterUpdateQuery<RegisterMutation, MeQuery>(
+            cache,
+            { query: MeDocument },
+            _result,
+            (result, query) => {
+              if(result.login.errors) {
+                return query;
+              } else {
+                return {
+                  me: result.login.user,
+                };
+              }
+            }
+          )
         }
       }
+      },
+
     }
+
   }), fetchExchange],
 });
 
