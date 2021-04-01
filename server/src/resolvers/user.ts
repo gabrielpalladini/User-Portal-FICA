@@ -11,7 +11,7 @@ import {
 import {User} from "../entities/User";
 import {MyContext} from "../types";
 import argon2 from 'argon2';
-import {EntityIdentifier, EntityManager} from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/postgresql';
 
 /*@InputType()
 class UsernamePasswordInput {
