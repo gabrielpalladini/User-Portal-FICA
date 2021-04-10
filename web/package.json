@@ -12,6 +12,7 @@
     "@chakra-ui/react": "^1.0.0",
     "@emotion/react": "^11.0.0",
     "@emotion/styled": "^11.0.0",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "@graphql-codegen/typescript-operations": "^1.17.15",
     "formik": "^2.2.6",
     "framer-motion": "^2.9.4",
