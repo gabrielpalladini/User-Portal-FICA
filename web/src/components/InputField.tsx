@@ -15,6 +15,8 @@ export const InputField: React.FC<InputFieldProps> = ({label, size: _, ...props}
         <FormControl isInvalid={!!error}>
           <FormLabel htmlFor={field.name}>{label}</FormLabel>
           <Input
+            color={'white'}
+            textAlign={'center'}
             {...field}
             {...props}
             id={field.name}

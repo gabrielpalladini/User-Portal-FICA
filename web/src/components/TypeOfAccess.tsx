@@ -10,10 +10,10 @@ interface NavBarProps {
 export const TypeOfAccess: React.FC<NavBarProps> = ({}) => {
 
   return (
-    <Flex p={4}>
+    <Flex p={4} pb={'50px'}>
       <Stack spacing={4} direction="column" align="center">
         <Text fontSize="20px" fontWeight={'800'} color={'white'} width={'200px'} align={'center'}>Selecione o tipo de acesso</Text>
-        <NextLink href="/login">
+        <NextLink href="/loginMoradora">
               <Button
               variant="link"
               backgroundColor={'white'}

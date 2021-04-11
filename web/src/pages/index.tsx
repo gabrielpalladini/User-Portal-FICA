@@ -12,21 +12,18 @@ import {Center} from '@chakra-ui/react';
 const Index = () => {
   const [{data}] = usePostsQuery();
   return (
-    <>
-      <Container centerContent backgroundColor={'green'} paddingTop="20" >
-        <Heading color='white' size="4xl">FICA</Heading>
-        <Divider size={'s'}/>
+      <Container centerContent backgroundColor={'#71BF45'} paddingTop="20" >
+        <Heading color='white' size="4xl" paddingBottom={'80px'}>FICA</Heading>
         <FontAwesomeIcon size={"10x"} icon={faHome} />
+        <Divider width={"250px"} borderTop={'3px solid #469D21'} marginBottom={'15px'} marginTop={'15px'} color={'#8c8b8b'}/>
         <Text fontSize="4xl" fontWeight={'800'} >manual  da <br/> moradora</Text>
-        <Divider />
+        <Divider width={"250px"} borderTop={'3px solid #469D21'} marginBottom={'15px'} marginTop={'15px'} color={'#8c8b8b'}/>
         <TypeOfAccess/>
-        <br/>
+        {/*<br/>
         {!data ? (
           <div>loading...</div>
-        ) : data.posts.map((p) => <div key={p.id}>{p.title}</div>)}
-        <NavBar/>
+        ) : data.posts.map((p) => <div key={p.id}>{p.title}</div>)}*/}
       </Container>
-    </>
   );
 }
 
