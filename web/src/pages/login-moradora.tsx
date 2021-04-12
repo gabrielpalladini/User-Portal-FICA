@@ -9,8 +9,10 @@ import { useRouter } from 'next/router';
 import {Container, Text} from '@chakra-ui/layout';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import { faUsers } from '@fortawesome/free-solid-svg-icons'
+import {createUrqlClient} from '../utils/createUrqlClient';
+import {withUrqlClient} from 'next-urql'
 
-const Login: React.FC<{}> = () => {
+const LoginMoradora: React.FC<{}> = () => {
   const router = useRouter();
   const [,login] = useLoginMutation();
   return (
@@ -66,4 +68,4 @@ const Login: React.FC<{}> = () => {
   );
 };
 
-export default Login;
+export default withUrqlClient(createUrqlClient)(LoginMoradora);

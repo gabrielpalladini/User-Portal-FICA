@@ -13,7 +13,7 @@ export const TypeOfAccess: React.FC<NavBarProps> = ({}) => {
     <Flex p={4} pb={'50px'}>
       <Stack spacing={4} direction="column" align="center">
         <Text fontSize="20px" fontWeight={'800'} color={'white'} width={'200px'} align={'center'}>Selecione o tipo de acesso</Text>
-        <NextLink href="/loginMoradora">
+        <NextLink href="/login-moradora">
               <Button
               variant="link"
               backgroundColor={'white'}
@@ -22,7 +22,7 @@ export const TypeOfAccess: React.FC<NavBarProps> = ({}) => {
               width={'200px'}
             > Moradora </Button>
           </NextLink>
-          <NextLink href="/register">
+          <NextLink href="/login-colaborador">
             <Button
             variant="link"
             backgroundColor={'white'}
