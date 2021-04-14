@@ -45,8 +45,10 @@ const connect_redis_1 = __importDefault(require("connect-redis"));
 const constants_1 = require("./constants");
 const user_1 = require("./resolvers/user");
 const cors_1 = __importDefault(require("cors"));
+const sendEmail_1 = require("./utils/sendEmail");
 const port = 5001;
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    sendEmail_1.sendEmail("gmpalladini@gmail.com", 'Hello there');
     const orm = yield core_1.MikroORM.init(mikro_orm_config_1.default);
     yield orm.getMigrator().up();
     const app = express_1.default();

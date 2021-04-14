@@ -12,11 +12,13 @@ import connectRedis from 'connect-redis'
 import {__prod__, COOKIE_NAME} from "./constants";
 import {UserResolver} from './resolvers/user';
 import cors from 'cors';
+import {sendEmail} from './utils/sendEmail';
 
 
 const port = 5001;
 
 const main = async () => {
+  sendEmail("gmpalladini@gmail.com", 'Hello there')
     const orm = await MikroORM.init(microConfig);
     await orm.getMigrator().up();
 
