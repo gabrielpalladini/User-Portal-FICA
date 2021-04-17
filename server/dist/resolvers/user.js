@@ -74,9 +74,9 @@ let UserResolver = class UserResolver {
     }
     register(options, { em, req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const response = validateRegister_1.validateRegister(options);
-            if (response) {
-                return response;
+            const errors = validateRegister_1.validateRegister(options);
+            if (errors) {
+                return { errors };
             }
             const hashedPassword = yield argon2_1.default.hash(options.password);
             let user;
@@ -119,7 +119,7 @@ let UserResolver = class UserResolver {
                 return {
                     errors: [
                         {
-                            field: "username",
+                            field: "usernameOrEmail",
                             message: "that username doesn't exist"
                         }
                     ]

@@ -16,7 +16,6 @@ class Migration20210415185554 extends migrations_1.Migration {
         return __awaiter(this, void 0, void 0, function* () {
             this.addSql('alter table "user" add column "email" text not null;');
             this.addSql('alter table "user" add constraint "user_email_unique" unique ("email");');
-            this.addSql('alter table "user" add constraint "user_email_unique" unique ("email");');
         });
     }
 }

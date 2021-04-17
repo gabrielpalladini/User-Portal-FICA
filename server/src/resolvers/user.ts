@@ -1,7 +1,6 @@
 import {
   Resolver,
   Mutation,
-  InputType,
   Field,
   Arg,
   Ctx,
@@ -57,9 +56,9 @@ export class UserResolver {
     @Arg('options') options: UsernamePasswordInput,
     @Ctx() { em, req }: MyContext
   ): Promise<UserResponse> {
-    const response = validateRegister(options);
-    if (response) {
-      return response;
+    const errors = validateRegister(options);
+    if (errors) {
+      return { errors };
     }
 
     const hashedPassword = await argon2.hash(options.password);
@@ -114,7 +113,7 @@ export class UserResolver {
       return {
         errors: [
           {
-            field: "username",
+            field: "usernameOrEmail",
             message: "that username doesn't exist"
           }
         ]
