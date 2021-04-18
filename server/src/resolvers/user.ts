@@ -11,9 +11,11 @@ import {User} from "../entities/User";
 import {MyContext} from "../types";
 import argon2 from 'argon2';
 import {EntityManager} from '@mikro-orm/postgresql';
-import {COOKIE_NAME} from '../constants';
+import {COOKIE_NAME, FORGET_PASSWORD_PREFIX} from '../constants';
 import {UsernamePasswordInput} from './UsernamePasswordInput';
 import {validateRegister} from '../utils/validateRegister';
+import {sendEmail} from '../utils/sendEmail';
+import {v4} from 'uuid';
 
 @ObjectType()
 class FieldError {
@@ -35,10 +37,28 @@ class UserResponse {
 @Resolver()
 export class UserResolver {
   @Mutation(() => Boolean)
-  async forgotPassword(@Arg("email") email: string, @Ctx() { em }: MyContext) {
+  async forgotPassword(@Arg("email") email: string, @Ctx() {em, redis}: MyContext) {
+    const user = await em.findOne(User, {email});
+    if (!user) {
+      //the email is not in the database
+      return true;
+    }
+
+    const token = v4();
+
+    await redis.set(
+      FORGET_PASSWORD_PREFIX + token,
+      user.id, 'ex',
+      1000 * 60 * 60 * 24
+    ); // 3 days
+
+    await sendEmail(
+      email,
+      `<a href>http://localhost:3000/change-password/${token}</a>`
+    );
+
     return true;
   }
-
 
   @Query(() => User, {nullable: true})
   async me(@Ctx() {req, em}: MyContext) {
@@ -54,11 +74,11 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async register(
     @Arg('options') options: UsernamePasswordInput,
-    @Ctx() { em, req }: MyContext
+    @Ctx() {em, req}: MyContext
   ): Promise<UserResponse> {
     const errors = validateRegister(options);
     if (errors) {
-      return { errors };
+      return {errors};
     }
 
     const hashedPassword = await argon2.hash(options.password);
@@ -106,9 +126,9 @@ export class UserResolver {
   ): Promise<UserResponse> {
     const user = await em.findOne(User,
       usernameOrEmail.includes('@')
-        ? { username: usernameOrEmail }
-        : { username: usernameOrEmail }
-        );
+        ? {username: usernameOrEmail}
+        : {username: usernameOrEmail}
+    );
     if (!user) {
       return {
         errors: [
@@ -149,7 +169,7 @@ export class UserResolver {
           return;
         }
         resolve(true);
-        })
-      );
-    }
+      })
+    );
   }
+}
