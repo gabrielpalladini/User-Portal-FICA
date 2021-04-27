@@ -74,7 +74,8 @@ let UserResolver = class UserResolver {
             }
             const userId = yield redis.get(constants_1.FORGET_PASSWORD_PREFIX + token);
             if (!userId) {
-                return { errors: [
+                return {
+                    errors: [
                         {
                             field: "token",
                             message: "token expired"
@@ -87,8 +88,8 @@ let UserResolver = class UserResolver {
                 return {
                     errors: [
                         {
-                            field: "newPassword",
-                            message: "length must be greater than 2"
+                            field: "token",
+                            message: "user no longer exists"
                         },
                     ],
                 };
