@@ -27,8 +27,18 @@ const constants_1 = require("./constants");
 const user_1 = require("./resolvers/user");
 const cors_1 = __importDefault(require("cors"));
 const User_1 = require("./entities/User");
+const typeorm_1 = require("typeorm");
 const port = 5001;
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    const conn = yield typeorm_1.createConnection({
+        type: 'postgres',
+        database: 'lireddit2',
+        username: 'postgres',
+        password: 'postgres',
+        logging: true,
+        synchronize: true,
+        entities: []
+    });
     const orm = yield core_1.MikroORM.init(mikro_orm_config_1.default);
     yield orm.em.nativeDelete(User_1.User, {});
     yield orm.getMigrator().up();

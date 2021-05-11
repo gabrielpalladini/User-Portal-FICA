@@ -13,10 +13,20 @@ import {__prod__, COOKIE_NAME} from "./constants";
 import {UserResolver} from './resolvers/user';
 import cors from 'cors';
 import {User} from './entities/User';
+import {createConnection} from 'typeorm';
 
 const port = 5001;
 
 const main = async () => {
+  const conn = await createConnection({
+    type: 'postgres',
+    database: 'lireddit2',
+    username: 'postgres',
+    password: 'postgres',
+    logging: true,
+    synchronize: true,
+    entities: []
+  })
     const orm = await MikroORM.init(microConfig);
     await orm.em.nativeDelete(User, {})
     await orm.getMigrator().up();
