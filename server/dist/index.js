@@ -28,6 +28,7 @@ const user_1 = require("./resolvers/user");
 const cors_1 = __importDefault(require("cors"));
 const User_1 = require("./entities/User");
 const typeorm_1 = require("typeorm");
+const Post_1 = require("./entities/Post");
 const port = 5001;
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const conn = yield typeorm_1.createConnection({
@@ -37,7 +38,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         password: 'postgres',
         logging: true,
         synchronize: true,
-        entities: []
+        entities: [Post_1.Post, User_1.User]
     });
     const orm = yield core_1.MikroORM.init(mikro_orm_config_1.default);
     yield orm.em.nativeDelete(User_1.User, {});
@@ -70,7 +71,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             resolvers: [hello_1.HelloResolver, post_1.PostResolver, user_1.UserResolver],
             validate: false
         }),
-        context: ({ req, res }) => ({ em: orm.em, req, res, redis }),
+        context: ({ req, res }) => ({ req, res, redis }),
     });
     apolloServer.applyMiddleware({
         app,

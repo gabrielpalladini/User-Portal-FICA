@@ -12,10 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
-let User = class User {
+let User = class User extends typeorm_1.BaseEntity {
     constructor() {
+        super(...arguments);
         this.createdAt = Date;
-        this.updatedAt = new Date();
+        this.updatedAt = Date;
     }
 };
 __decorate([

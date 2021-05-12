@@ -5,19 +5,16 @@ import {MyContext} from "../types";
 @Resolver()
 export class PostResolver {
     @Query(() => [Post])
-    async posts(@Ctx() { em }: MyContext): Promise<Post[]> {
-      return em.find(Post, {});
+    async posts(): Promise<Post[]> {
+      return Post.find();
     }
 
     @Query(() => Post, {nullable: true})
-    post(
-        @Arg("id", () => Int) id: number,
-        @Ctx() {em}: MyContext
-    ): Promise<Post | null> {
-        return em.findOne(Post, {id});
+    post(@Arg("id") id: number): Promise<Post | undefined> {
+        return Post.findOne(id);
     }
 
-    @Mutation(() => Post, {nullable: true})
+    @Mutation(() => Post)
     async createPost(
         @Arg("title") title: string,
         @Ctx() {em}: MyContext

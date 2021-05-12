@@ -14,6 +14,7 @@ import {UserResolver} from './resolvers/user';
 import cors from 'cors';
 import {User} from './entities/User';
 import {createConnection} from 'typeorm';
+import {Post} from './entities/Post';
 
 const port = 5001;
 
@@ -25,7 +26,7 @@ const main = async () => {
     password: 'postgres',
     logging: true,
     synchronize: true,
-    entities: []
+    entities: [Post, User]
   })
     const orm = await MikroORM.init(microConfig);
     await orm.em.nativeDelete(User, {})
@@ -67,7 +68,7 @@ const main = async () => {
             resolvers: [HelloResolver, PostResolver, UserResolver],
             validate: false
         }),
-        context: ({req, res }) => ({ em: orm.em, req, res, redis }),
+        context: ({req, res }) => ({ req, res, redis }),
     });
 
     apolloServer.applyMiddleware({

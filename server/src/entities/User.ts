@@ -1,9 +1,9 @@
 import {Field, ObjectType} from "type-graphql";
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
+import {BaseEntity, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn} from 'typeorm';
 
 @ObjectType()
 @Entity()
-export class User {
+export class User extends BaseEntity {
     @Field()
     @PrimaryGeneratedColumn()
     id!: number;
@@ -14,7 +14,7 @@ export class User {
 
     @Field(() => String)
     @UpdateDateColumn()
-    updatedAt = new Date();
+    updatedAt = Date;
 
     @Field()
     @Column({ unique: true })
